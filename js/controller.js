@@ -1,11 +1,24 @@
-let xhr = new XMLHttpRequest();
-xhr.open('GET', 'http://newsapi.org/v2/top-headlines?country=in&apiKey=d09369f8f1484b25a09f79adb9e590e4', true);
-xhr.onprogress = function () {
-    console.log("In progress");
-}
+function sendXhrRequestAndGetNews(countryName) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://newsapi.org/v2/top-headlines?country=${countryName}&apiKey=d09369f8f1484b25a09f79adb9e590e4`, true);
+    xhr.onprogress = function () {
+        console.log("In progress");
+    }
 
-function sendXhrRequestAndGetNews(){
-    
+    xhr.onload = function () {
+        newsObj = JSON.parse(this.responseText);
+        if (newsObj['status'] == 'ok') {
+            populateNewsONScreen(newsObj);
+        }
+        else {
+            let errorBox = document.createElement('div');
+            errorBox.innerHTML = `<p style="font-size:30px;">You are not connected with internet.</p>`;
+            document.getElementById('innerDiv').appendChild(errorBox);;
+        }
+        console.log(newsObj);
+    }
+
+    xhr.send();
 }
 
 let countriesNews = {
@@ -68,40 +81,26 @@ let countriesNews = {
 let countiesDropdown = document.getElementById('countries');
 let options = '';
 Object.keys(countriesNews).forEach(element => {
-    options += `<option value='${countriesNews[element]}'>${element}</option>`;
+    options += `<option class="option" value='${countriesNews[element]}'>${element}</option>`;
 });
 options += `<option value="" disabled selected>Select Country</option>`;
 countiesDropdown.innerHTML = options;
-xhr.onload = function () {
-    newsObj = JSON.parse(this.responseText);
-    if (newsObj['status'] == 'ok') {
-        populateNewsONScreen(newsObj);
-    }
-    else {
-        let errorBox = document.createElement('div');
-        errorBox.innerHTML = `<p style="font-size:30px;">You are not connected with internet.</p>`;
-        document.getElementById('innerDiv').appendChild(errorBox);;
-    }
-    console.log(newsObj);
-}
-
-xhr.send();
 
 function populateNewsONScreen(newsObj) {
     let parentBox = document.getElementById('innerDiv');
     let newsElement = '';
     newsObj['articles'].forEach(element => {
         newsElement += `<div class="newsWalaDaba">
-<div class="headingNews">
-    <span class="heading">
-        ${element.title}
-    </span>
-    <i class="fa fa-angle-down fa-rotate-18" aria-hidden="true"></i>
-</div>
-<div class="newsDescription none-display">
-${element.description}<a href="${element.url} target="_blank"> Read more..</a>
-</div>
-</div>`;
+                        <div class="headingNews">
+                        <span class="heading">
+                            ${element.title}
+                        </span>
+                        <i class="fa fa-angle-down fa-rotate-18" aria-hidden="true"></i>
+                        </div>
+                        <div class="newsDescription none-display">
+                        ${element.description}<a href="${element.url} target="_blank"> Read more..</a>
+                        </div>
+                        </div>`;
     });
     parentBox.innerHTML = newsElement;
 }
@@ -109,7 +108,11 @@ ${element.description}<a href="${element.url} target="_blank"> Read more..</a>
 
 
 document.getElementById('innerDiv').addEventListener('click', toggle);
-document.getElementById('countries').addEventListener('click',getSelectedCountryNews);
+
+function getSelectedCountryNews(){
+    let selectedCountry = document.getElementById('countries').value;
+    sendXhrRequestAndGetNews(selectedCountry);
+}
 
 function toggle(element) {
     let innerElementsClicked = element.target.classList[0] == 'heading' || element.target.classList[0] == 'fa';
@@ -123,3 +126,6 @@ function toggle(element) {
     }
     element.stopPropagation();
 }
+
+let selectedCountryInDropdown = document.getElementById('countries').value;
+sendXhrRequestAndGetNews(selectedCountryInDropdown.length > 0 ? selectedCountryInDropdown : 'in');
