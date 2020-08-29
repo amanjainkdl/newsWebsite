@@ -3,19 +3,81 @@ xhr.open('GET', 'http://newsapi.org/v2/top-headlines?country=in&apiKey=d09369f8f
 xhr.onprogress = function () {
     console.log("In progress");
 }
-xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-xhr.setRequestHeader("Access-Control-Allow-Headers", "X-Requested-With");
-xhr.setRequestHeader('Content-type', 'application/json');
-xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-xhr.setRequestHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-xhr.setRequestHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+
+function sendXhrRequestAndGetNews(){
+    
+}
+
+let countriesNews = {
+    "Argentina": "ar",
+    "Australia": "au",
+    "Austria": "at",
+    "Belgium": "be",
+    "Brazil": "br",
+    "Bulgaria": "bg",
+    "Canada": "ca",
+    "China": "cn",
+    "Colombia": "co",
+    "Cuba": "cu",
+    "Czech Republic": "cz",
+    "Egypt": "eg",
+    "France": "fr",
+    "Germany": "de",
+    "Greece": "gr",
+    "Hong Kong": "hk",
+    "Hungary": "hu",
+    "India": "in",
+    "Indonesia": "id",
+    "Ireland": "ie",
+    "Israel": "il",
+    "Italy": "it",
+    "Japan": "jp",
+    "Latvia": "lv",
+    "Lithuania": "lt",
+    "Malaysia": "my",
+    "Mexico": "mx",
+    "Morocco": "ma",
+    "Netherlands": "nl",
+    "New Zealand": "nz",
+    "Nigeria": "ng",
+    "Norway": "no",
+    "Philippines": "ph",
+    "Poland": "pl",
+    "Portugal": "pt",
+    "Romania": "ro",
+    "Russia": "ru",
+    "Saudi Arabia": "sa",
+    "Serbia": "rs",
+    "Singapore": "sg",
+    "Slovakia": "sk",
+    "Slovenia": "si",
+    "South Africa": "za",
+    "South Korea": "kr",
+    "Sweden": "se",
+    "Switzerland": "ch",
+    "Taiwan": "tw",
+    "Thailand": "th",
+    "Turkey": "tr",
+    "UAE": "ae",
+    "Ukraine": "ua",
+    "United Kingdom": "gb",
+    "United States": "ve",
+    "Venuzuela": "us"
+};
+
+let countiesDropdown = document.getElementById('countries');
+let options = '';
+Object.keys(countriesNews).forEach(element => {
+    options += `<option value='${countriesNews[element]}'>${element}</option>`;
+});
+options += `<option value="" disabled selected>Select Country</option>`;
+countiesDropdown.innerHTML = options;
 xhr.onload = function () {
     newsObj = JSON.parse(this.responseText);
     if (newsObj['status'] == 'ok') {
         populateNewsONScreen(newsObj);
     }
-    else{
+    else {
         let errorBox = document.createElement('div');
         errorBox.innerHTML = `<p style="font-size:30px;">You are not connected with internet.</p>`;
         document.getElementById('innerDiv').appendChild(errorBox);;
@@ -47,6 +109,7 @@ ${element.description}<a href="${element.url} target="_blank"> Read more..</a>
 
 
 document.getElementById('innerDiv').addEventListener('click', toggle);
+document.getElementById('countries').addEventListener('click',getSelectedCountryNews);
 
 function toggle(element) {
     let innerElementsClicked = element.target.classList[0] == 'heading' || element.target.classList[0] == 'fa';

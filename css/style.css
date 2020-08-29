@@ -22,8 +22,18 @@ nav ul li {
 .innerDiv {
     display: flex;
     flex-direction: column;
-    width: 70%;
     margin: 50px auto;
+    max-width: 80%;
+}
+
+.mainDiv {
+    display: flex;
+    background-color: yellowgreen;
+}
+
+.leftDiv {
+    background-color: tomato;
+    width: 20%;
 }
 
 .headingNews {
@@ -41,6 +51,11 @@ nav ul li {
     background-color: #E8E8E8;
 }
 
+.newsWalaDaba {
+    width: 95%;
+    margin: auto;
+}
+
 .none-display {
     display: none;
 }
@@ -49,9 +64,37 @@ nav ul li {
     display: block;
 }
 
+.dropdownDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    margin-top: 50px;
+    background-color: yellow;
+}
+
+#countries{
+    width: 80%;
+}
+
 @media only screen and (max-width:400px) {
     .innerDiv {
+        max-width: 100%;
+        margin: 0px;
+    }    
+}
+
+@media only screen and (max-width:800px) {
+    
+    .mainDiv {
+        flex-direction: column;        
+    }
+
+    .leftDiv{
         width: 100%;
-        margin-top: 0px;
+    }
+
+    .dropdownDiv{
+        margin: 0px;
+        padding: 20px;
     }
 }
